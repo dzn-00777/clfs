@@ -13,8 +13,6 @@ import javax.sql.DataSource;
  */
 public interface JdbcOp {
 
-    String MYSQL = "mysql";
-
     static JdbcOp getInstance(DataSource dataSource, DataSourceType type) {
         if (type == DataSourceType.MYSQL) {
             return new MysqlJdbcOp(dataSource);
