@@ -5,7 +5,7 @@ package org.earthdog.clfs.init;
  * @Author DZN
  * @Desc FileInitialization
  */
-public class FileInitialization implements Initialization{
+public class FileInitialization implements Initialization {
     @Override
     public void init() {
 

@@ -1,5 +1,6 @@
 package org.earthdog.clfs.init;
 
+import org.earthdog.clfs.conf.Config;
 import org.earthdog.clfs.enums.DataSourceType;
 
 /**
@@ -7,11 +8,17 @@ import org.earthdog.clfs.enums.DataSourceType;
  * @Author DZN
  * @Desc DatabaseInitialization
  */
-public interface DatabaseInitialization extends Initialization{
+public abstract class DatabaseInitialization implements Initialization {
 
-    static DatabaseInitialization getInstance(DataSourceType type) {
+    protected Config config;
+
+    protected DatabaseInitialization(Config config) {
+        this.config = config;
+    }
+
+    public static DatabaseInitialization getInstance(DataSourceType type, Config config) {
         if (type == DataSourceType.MYSQL) {
-            return new MysqlInitialization();
+            return new MysqlInitialization(config);
         }
         throw new RuntimeException();
     }
