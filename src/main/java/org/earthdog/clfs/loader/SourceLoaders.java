@@ -2,6 +2,8 @@ package org.earthdog.clfs.loader;
 
 import org.earthdog.clfs.enums.DataSourceType;
 
+import javax.sql.DataSource;
+
 /**
  * @Date 2024/10/17 17:41
  * @Author DZN
@@ -13,7 +15,7 @@ public final class SourceLoaders {
         return new DefaultSourceLoader();
     }
 
-    public static SourceLoader newDatabaseSourceLoader() {
-        return new DatabaseSourceLoader(null, DataSourceType.MYSQL, new DefaultSourceLoader());
+    public static SourceLoader newDatabaseSourceLoader(DataSource dataSource) {
+        return new DatabaseSourceLoader(dataSource, DataSourceType.MYSQL, new DefaultSourceLoader());
     }
 }

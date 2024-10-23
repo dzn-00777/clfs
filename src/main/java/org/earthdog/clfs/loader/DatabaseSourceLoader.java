@@ -4,7 +4,6 @@ import org.earthdog.clfs.enums.DataSourceType;
 import org.earthdog.clfs.jdbc.JdbcOp;
 import org.earthdog.clfs.metadata.ClassMetadata;
 import org.earthdog.clfs.metadata.ClassMetadataGroup;
-import org.earthdog.clfs.metadata.StringClassMetadata;
 
 import javax.sql.DataSource;
 
@@ -27,11 +26,10 @@ public class DatabaseSourceLoader extends DefaultSourceLoader {
     public Object loadClass(ClassMetadata classMetadata) {
         Object o = defaultSourceLoader.loadClass(classMetadata);
         // 将ByteCode添加到ClassMetadata中
-        StringClassMetadata stringClassMetadata = (StringClassMetadata) classMetadata;
         byte[] byteCode = defaultSourceLoader.getByteCode("common", classMetadata.getQualifiedName());
-        stringClassMetadata.setByteCode(byteCode);
+        classMetadata.setByteCode(byteCode);
         // 插入或更新至数据库
-        jdbcOp.saveClassMetadata(stringClassMetadata);
+        jdbcOp.saveClassMetadata(classMetadata);
         return o;
     }
 
@@ -42,8 +40,7 @@ public class DatabaseSourceLoader extends DefaultSourceLoader {
         // 将ByteCode添加到ClassMetadata中
         ClassMetadata[] metadataArray = classMetadataGroup.getClassMetadataArray();
         for (ClassMetadata classMetadata : metadataArray) {
-            StringClassMetadata stringClassMetadata = (StringClassMetadata) classMetadata;
-            stringClassMetadata.setByteCode(defaultSourceLoader.getByteCode(groupName, stringClassMetadata.getQualifiedName()));
+            classMetadata.setByteCode(defaultSourceLoader.getByteCode(groupName, classMetadata.getQualifiedName()));
         }
         // 插入或更新至数据库
         jdbcOp.saveClassMetadataGroup(classMetadataGroup);

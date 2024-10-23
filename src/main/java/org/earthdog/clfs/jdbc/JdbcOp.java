@@ -1,8 +1,8 @@
 package org.earthdog.clfs.jdbc;
 
 import org.earthdog.clfs.enums.DataSourceType;
+import org.earthdog.clfs.metadata.ClassMetadata;
 import org.earthdog.clfs.metadata.ClassMetadataGroup;
-import org.earthdog.clfs.metadata.StringClassMetadata;
 
 import javax.sql.DataSource;
 
@@ -22,7 +22,7 @@ public interface JdbcOp {
         throw new RuntimeException();
     }
 
-    void saveClassMetadata(StringClassMetadata stringClassMetadata);
+    void saveClassMetadata(ClassMetadata stringClassMetadata);
 
     void saveClassMetadataGroup(ClassMetadataGroup classMetadataGroup);
 }

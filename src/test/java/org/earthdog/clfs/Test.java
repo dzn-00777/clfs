@@ -4,7 +4,6 @@ import org.earthdog.clfs.loader.SourceLoaders;
 import org.earthdog.clfs.loader.DefaultSourceLoader;
 import org.earthdog.clfs.metadata.ClassMetadata;
 import org.earthdog.clfs.metadata.ClassMetadataGroup;
-import org.earthdog.clfs.metadata.StringClassMetadata;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -72,14 +71,14 @@ public class Test {
     }
 
     private static void shareScopeClassTest() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
-        StringClassMetadata share = new StringClassMetadata("com.dzn.ShareClass", shareClass);
-        StringClassMetadata useShare = new StringClassMetadata("com.dzn.UseShareClass", useShareClass);
+        ClassMetadata share = new ClassMetadata("com.dzn.ShareClass", shareClass);
+        ClassMetadata useShare = new ClassMetadata("com.dzn.UseShareClass", useShareClass);
 
         Object o = sourceLoader.loadClass(share);
         Method method = o.getClass().getMethod("println");
         method.invoke(o);
 
-        ClassMetadata[] classMetadata = new StringClassMetadata[]{useShare};
+        ClassMetadata[] classMetadata = new ClassMetadata[]{useShare};
         ClassMetadataGroup classMetadataGroup = new ClassMetadataGroup("com.dzn", classMetadata);
 
         sourceLoader.loadClassBatch(classMetadataGroup);
@@ -127,8 +126,8 @@ public class Test {
                 }
                 """;
 
-        StringClassMetadata share1 = new StringClassMetadata("com.dzn.ShareClass1", shareClass1);
-        StringClassMetadata share2 = new StringClassMetadata("com.dzn.ShareClass2", shareClass2);
+        ClassMetadata share1 = new ClassMetadata("com.dzn.ShareClass1", shareClass1);
+        ClassMetadata share2 = new ClassMetadata("com.dzn.ShareClass2", shareClass2);
 
         Object o1 = sourceLoader.loadClass(share1);
         Method method1 = o1.getClass().getMethod("println");
@@ -220,13 +219,13 @@ public class Test {
                 }
                 """;
 
-        StringClassMetadata group1ClassMetadata1 = new StringClassMetadata("com.dzn.group1.Group1Test1", group1Class1);
-        StringClassMetadata group1ClassMetadata2 = new StringClassMetadata("com.dzn.group1.Group1Test2", group1Class2);
-        StringClassMetadata group2ClassMetadata1 = new StringClassMetadata("com.dzn.group2.Group2Test1", group2Class1);
-        StringClassMetadata group2ClassMetadata2 = new StringClassMetadata("com.dzn.group2.Group2Test2", group2Class2);
+        ClassMetadata group1ClassMetadata1 = new ClassMetadata("com.dzn.group1.Group1Test1", group1Class1);
+        ClassMetadata group1ClassMetadata2 = new ClassMetadata("com.dzn.group1.Group1Test2", group1Class2);
+        ClassMetadata group2ClassMetadata1 = new ClassMetadata("com.dzn.group2.Group2Test1", group2Class1);
+        ClassMetadata group2ClassMetadata2 = new ClassMetadata("com.dzn.group2.Group2Test2", group2Class2);
 
-        ClassMetadata[] classMetadata1s = new StringClassMetadata[]{group1ClassMetadata1, group1ClassMetadata2};
-        ClassMetadata[] classMetadata2s = new StringClassMetadata[]{group2ClassMetadata1, group2ClassMetadata2};
+        ClassMetadata[] classMetadata1s = new ClassMetadata[]{group1ClassMetadata1, group1ClassMetadata2};
+        ClassMetadata[] classMetadata2s = new ClassMetadata[]{group2ClassMetadata1, group2ClassMetadata2};
 
         ClassMetadataGroup metadataGroup1 = new ClassMetadataGroup("com.dzn.group1", classMetadata1s);
         ClassMetadataGroup metadataGroup2 = new ClassMetadataGroup("com.dzn.group2", classMetadata2s);
@@ -322,13 +321,13 @@ public class Test {
                 }
                 """;
 
-        StringClassMetadata groupClassMetadata1 = new StringClassMetadata("com.dzn.inner.GroupTest1", groupClass1);
-        StringClassMetadata groupClassMetadata2 = new StringClassMetadata("com.dzn.inner.GroupTest2", groupClass2);
-        StringClassMetadata groupClassMetadata3 = new StringClassMetadata("com.dzn.inner.GroupTest3", groupClass3);
-        StringClassMetadata groupClassMetadata4 = new StringClassMetadata("com.dzn.inner.GroupTest4", groupClass4);
+        ClassMetadata groupClassMetadata1 = new ClassMetadata("com.dzn.inner.GroupTest1", groupClass1);
+        ClassMetadata groupClassMetadata2 = new ClassMetadata("com.dzn.inner.GroupTest2", groupClass2);
+        ClassMetadata groupClassMetadata3 = new ClassMetadata("com.dzn.inner.GroupTest3", groupClass3);
+        ClassMetadata groupClassMetadata4 = new ClassMetadata("com.dzn.inner.GroupTest4", groupClass4);
 
-        ClassMetadata[] classMetadata1s = new StringClassMetadata[]{groupClassMetadata1, groupClassMetadata2};
-        ClassMetadata[] classMetadata2s = new StringClassMetadata[]{groupClassMetadata3, groupClassMetadata4};
+        ClassMetadata[] classMetadata1s = new ClassMetadata[]{groupClassMetadata1, groupClassMetadata2};
+        ClassMetadata[] classMetadata2s = new ClassMetadata[]{groupClassMetadata3, groupClassMetadata4};
 
         ClassMetadataGroup metadataGroup1 = new ClassMetadataGroup("com.dzn.inner", classMetadata1s);
         ClassMetadataGroup metadataGroup2 = new ClassMetadataGroup("com.dzn.inner", classMetadata2s);

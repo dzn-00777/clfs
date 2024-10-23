@@ -14,15 +14,6 @@ import java.net.URI;
 public class EnumTest {
 
     public static void main(String[] args) {
-        URI uri = URI.create("string:///com/dzn/Test.java");
-        File file = new File(uri);
-        System.out.println(file.getAbsolutePath());
-        try {
-            FileOutputStream byteCode = new FileOutputStream(file);
-            byteCode.close();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
 
     }
 
