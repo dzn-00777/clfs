@@ -9,15 +9,11 @@ import org.earthdog.clfs.enums.DataSourceType;
  */
 public final class SourceLoaders {
 
-    public static SourceLoader<String> newStringSourceLoader() {
-        return new StringSourceLoader();
+    public static SourceLoader newStringSourceLoader() {
+        return new DefaultSourceLoader();
     }
 
-    public static SourceLoader<byte[]> newByteCodeSourceLoader() {
-        return new ByteCodeSourceLoader();
-    }
-
-    public static SourceLoader<String> newDatabaseSourceLoader() {
-        return new DatabaseSourceLoader(null, DataSourceType.MYSQL, new StringSourceLoader());
+    public static SourceLoader newDatabaseSourceLoader() {
+        return new DatabaseSourceLoader(null, DataSourceType.MYSQL, new DefaultSourceLoader());
     }
 }

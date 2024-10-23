@@ -5,7 +5,7 @@ package org.earthdog.clfs.metadata;
  * @Author DZN
  * @Desc StringClassMetadata
  */
-public class StringClassMetadata extends ClassMetadata<String> {
+public class StringClassMetadata extends ClassMetadata {
 
     private byte[] byteCode;
 

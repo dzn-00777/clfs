@@ -5,7 +5,7 @@ package org.earthdog.clfs.init;
  * @Author DZN
  * @Desc MysqlInitialization
  */
-public class MysqlInitialization implements Initialization{
+public class MysqlInitialization implements DatabaseInitialization{
     @Override
     public void init() {
 

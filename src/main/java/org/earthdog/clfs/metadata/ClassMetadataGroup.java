@@ -5,12 +5,12 @@ package org.earthdog.clfs.metadata;
  * @Author DZN
  * @Desc ClassMetadataGroup
  */
-public class ClassMetadataGroup<T> {
+public class ClassMetadataGroup {
     private final String groupName;
-    private final ClassMetadata<T>[] classMetadataArray;
+    private final ClassMetadata[] classMetadataArray;
     private ClassLoader classLoader;
 
-    public ClassMetadataGroup(String groupName, ClassMetadata<T>[] classMetadataArray) {
+    public ClassMetadataGroup(String groupName, ClassMetadata[] classMetadataArray) {
         this.groupName = groupName;
         this.classMetadataArray = classMetadataArray;
     }
@@ -19,7 +19,7 @@ public class ClassMetadataGroup<T> {
         return groupName;
     }
 
-    public ClassMetadata<T>[] getClassMetadataArray() {
+    public ClassMetadata[] getClassMetadataArray() {
         return classMetadataArray;
     }
 

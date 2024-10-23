@@ -1,6 +1,7 @@
 package org.earthdog.clfs.loader;
 
 import org.earthdog.clfs.classloader.StringClassLoader;
+import org.earthdog.clfs.conf.Config;
 import org.earthdog.clfs.metadata.ClassMetadata;
 import org.earthdog.clfs.metadata.ClassMetadataGroup;
 import org.earthdog.clfs.stringcomplie.SourceJavaFileManager;
@@ -19,12 +20,12 @@ import java.util.*;
  * @Author DZN
  * @Desc StringSourceLoader 从字符串中加载类 JavaCompile.CompilationTask不支持使用线程池提交 javac内部已经支持多线程编译
  */
-public class StringSourceLoader extends AbstractSourceLoader<String> {
+public class DefaultSourceLoader extends AbstractSourceLoader {
     private final JavaCompiler compiler;
     private final SourceJavaFileManager fileManager;
     private final StandardJavaFileManager manager;
 
-    public StringSourceLoader() {
+    public DefaultSourceLoader() {
         // 获取Java编译器
         compiler = ToolProvider.getSystemJavaCompiler();
         // 获取标准的Java文件管理器实例
@@ -36,10 +37,15 @@ public class StringSourceLoader extends AbstractSourceLoader<String> {
         for (File file : files) {
             classPath.add(file);
         }
-        classPath.add(new File(CLASS_OUTPUT_PATH + "common"));
+        File file = new File(CLASS_OUTPUT_PATH + "common");
+        if (!file.exists()) {
+            //noinspection ResultOfMethodCallIgnored
+            file.mkdirs();
+        }
+        classPath.add(file);
         try {
             manager.setLocation(StandardLocation.CLASS_PATH, classPath);
-            manager.setLocation(StandardLocation.CLASS_OUTPUT, Collections.singletonList(new File(CLASS_OUTPUT_PATH + "common")));
+            manager.setLocation(StandardLocation.CLASS_OUTPUT, Collections.singletonList(file));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -48,8 +54,8 @@ public class StringSourceLoader extends AbstractSourceLoader<String> {
     }
 
     @Override
-    public Object loadClass(ClassMetadata<String> classMetadata) {
-        String code = classMetadata.getData();
+    public Object loadClass(ClassMetadata classMetadata) {
+        String code = classMetadata.getCode();
         String qualifiedName = classMetadata.getQualifiedName();
 
         ClassLoader classLoader = StringClassLoader.DefaultGroupClassLoader.getInstance(fileManager);
@@ -71,7 +77,7 @@ public class StringSourceLoader extends AbstractSourceLoader<String> {
     }
 
     @Override
-    public void loadClassBatch(ClassMetadataGroup<String> classMetadataGroup) {
+    public void loadClassBatch(ClassMetadataGroup classMetadataGroup) {
         String groupName = classMetadataGroup.getGroupName();
         ClassLoader classLoader = fileManager.getClassLoader(groupName);
         if (classLoader == null) {
@@ -81,22 +87,27 @@ public class StringSourceLoader extends AbstractSourceLoader<String> {
         loadClassBatch0(classMetadataGroup);
     }
 
+    @Override
+    public Config getConfig() {
+        return null;
+    }
+
     public byte[] getByteCode(String groupName, String qualifiedName) {
         SourceSimpleJavaFileObject javaFileObject = (SourceSimpleJavaFileObject) fileManager.getJavaFileObjByGroup(groupName, qualifiedName);
         return javaFileObject.getByteCode();
     }
 
-    private void loadClassBatch0(ClassMetadataGroup<String> classMetadataGroup) {
+    private void loadClassBatch0(ClassMetadataGroup classMetadataGroup) {
         ClassLoader classLoader = classMetadataGroup.getClassLoader();
         String groupName = classMetadataGroup.getGroupName();
 
         fileManager.setGroup(groupName, classLoader);
-        ClassMetadata<?>[] classMetadataArray = classMetadataGroup.getClassMetadataArray();
+        ClassMetadata[] classMetadataArray = classMetadataGroup.getClassMetadataArray();
 
         Map<String, JavaFileObject> map = new HashMap<>(classMetadataArray.length);
         ArrayList<JavaFileObject> list = new ArrayList<>(classMetadataArray.length);
-        for (ClassMetadata<?> classMetadata : classMetadataArray) {
-            SourceSimpleJavaFileObject javaFileObject = new SourceSimpleJavaFileObject(classMetadata.getQualifiedName(), (String) classMetadata.getData(), classLoader, groupName);
+        for (ClassMetadata classMetadata : classMetadataArray) {
+            SourceSimpleJavaFileObject javaFileObject = new SourceSimpleJavaFileObject(classMetadata.getQualifiedName(), classMetadata.getCode(), classLoader, groupName);
             map.put(classMetadata.getQualifiedName(), javaFileObject);
             list.add(javaFileObject);
         }
@@ -105,7 +116,7 @@ public class StringSourceLoader extends AbstractSourceLoader<String> {
         executeCompileTask(list, groupName);
 
         Map<String, Object> objectMap = new HashMap<>(classMetadataArray.length);
-        for (ClassMetadata<?> classMetadata : classMetadataArray) {
+        for (ClassMetadata classMetadata : classMetadataArray) {
             objectMap.put(classMetadata.getQualifiedName(), loadClass(classLoader, classMetadata.getQualifiedName()));
         }
         saveObjs(groupName, objectMap);

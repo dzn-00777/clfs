@@ -5,23 +5,23 @@ package org.earthdog.clfs.metadata;
  * @Author DZN
  * @Desc ClassMetadata
  */
-public abstract class ClassMetadata<T> {
+public abstract class ClassMetadata {
 
     protected String qualifiedName;
-    protected T data;
+    protected String code;
     protected ClassLoader classLoader;
 
-    protected ClassMetadata(String qualifiedName, T data) {
+    protected ClassMetadata(String qualifiedName, String code) {
         this.qualifiedName = qualifiedName;
-        this.data = data;
+        this.code = code;
     }
 
     public String getQualifiedName() {
         return qualifiedName;
     }
 
-    public T getData() {
-        return data;
+    public String getCode() {
+        return code;
     }
 
     public void setClassLoader(ClassLoader classLoader) {

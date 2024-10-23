@@ -24,5 +24,5 @@ public interface JdbcOp {
 
     void saveClassMetadata(StringClassMetadata stringClassMetadata);
 
-    void saveClassMetadataGroup(ClassMetadataGroup<String> classMetadataGroup);
+    void saveClassMetadataGroup(ClassMetadataGroup classMetadataGroup);
 }

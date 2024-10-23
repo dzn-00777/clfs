@@ -6,4 +6,9 @@ package org.earthdog.clfs.conf;
  * @Desc Config
  */
 public class Config {
+
+    private String sourcePath;
+    private String classOutPath;
+
+
 }

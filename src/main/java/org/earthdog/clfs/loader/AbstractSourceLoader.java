@@ -10,7 +10,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * @Author DZN
  * @Desc AbstractSourceLoader
  */
-public abstract class AbstractSourceLoader<T> implements SourceLoader<T> {
+public abstract class AbstractSourceLoader implements SourceLoader {
     /**
      * <p>从database, file, string加载的objects存放在这里</p>
      * <p>key 是 groupName | className 当 Value 中只有一个元素时是 className</p>

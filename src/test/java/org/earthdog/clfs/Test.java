@@ -1,7 +1,7 @@
 package org.earthdog.clfs;
 
 import org.earthdog.clfs.loader.SourceLoaders;
-import org.earthdog.clfs.loader.StringSourceLoader;
+import org.earthdog.clfs.loader.DefaultSourceLoader;
 import org.earthdog.clfs.metadata.ClassMetadata;
 import org.earthdog.clfs.metadata.ClassMetadataGroup;
 import org.earthdog.clfs.metadata.StringClassMetadata;
@@ -54,7 +54,7 @@ public class Test {
                             
             """;
 
-    static StringSourceLoader sourceLoader = (StringSourceLoader) SourceLoaders.newStringSourceLoader();
+    static DefaultSourceLoader sourceLoader = (DefaultSourceLoader) SourceLoaders.newStringSourceLoader();
 
     public static void main(String[] args) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
         // 测试共享类是否可以被其他group发现到
@@ -79,8 +79,8 @@ public class Test {
         Method method = o.getClass().getMethod("println");
         method.invoke(o);
 
-        ClassMetadata<String>[] classMetadata = new StringClassMetadata[]{useShare};
-        ClassMetadataGroup<String> classMetadataGroup = new ClassMetadataGroup<>("com.dzn", classMetadata);
+        ClassMetadata[] classMetadata = new StringClassMetadata[]{useShare};
+        ClassMetadataGroup classMetadataGroup = new ClassMetadataGroup("com.dzn", classMetadata);
 
         sourceLoader.loadClassBatch(classMetadataGroup);
         Object obj = sourceLoader.getObjByGroup("com.dzn", "com.dzn.UseShareClass");
@@ -225,11 +225,11 @@ public class Test {
         StringClassMetadata group2ClassMetadata1 = new StringClassMetadata("com.dzn.group2.Group2Test1", group2Class1);
         StringClassMetadata group2ClassMetadata2 = new StringClassMetadata("com.dzn.group2.Group2Test2", group2Class2);
 
-        ClassMetadata<String>[] classMetadata1s = new StringClassMetadata[]{group1ClassMetadata1, group1ClassMetadata2};
-        ClassMetadata<String>[] classMetadata2s = new StringClassMetadata[]{group2ClassMetadata1, group2ClassMetadata2};
+        ClassMetadata[] classMetadata1s = new StringClassMetadata[]{group1ClassMetadata1, group1ClassMetadata2};
+        ClassMetadata[] classMetadata2s = new StringClassMetadata[]{group2ClassMetadata1, group2ClassMetadata2};
 
-        ClassMetadataGroup<String> metadataGroup1 = new ClassMetadataGroup<>("com.dzn.group1", classMetadata1s);
-        ClassMetadataGroup<String> metadataGroup2 = new ClassMetadataGroup<>("com.dzn.group2", classMetadata2s);
+        ClassMetadataGroup metadataGroup1 = new ClassMetadataGroup("com.dzn.group1", classMetadata1s);
+        ClassMetadataGroup metadataGroup2 = new ClassMetadataGroup("com.dzn.group2", classMetadata2s);
 
         sourceLoader.loadClassBatch(metadataGroup1);
         Object o1 = sourceLoader.getObjByGroup("com.dzn.group1", "com.dzn.group1.Group1Test2");
@@ -327,11 +327,11 @@ public class Test {
         StringClassMetadata groupClassMetadata3 = new StringClassMetadata("com.dzn.inner.GroupTest3", groupClass3);
         StringClassMetadata groupClassMetadata4 = new StringClassMetadata("com.dzn.inner.GroupTest4", groupClass4);
 
-        ClassMetadata<String>[] classMetadata1s = new StringClassMetadata[]{groupClassMetadata1, groupClassMetadata2};
-        ClassMetadata<String>[] classMetadata2s = new StringClassMetadata[]{groupClassMetadata3, groupClassMetadata4};
+        ClassMetadata[] classMetadata1s = new StringClassMetadata[]{groupClassMetadata1, groupClassMetadata2};
+        ClassMetadata[] classMetadata2s = new StringClassMetadata[]{groupClassMetadata3, groupClassMetadata4};
 
-        ClassMetadataGroup<String> metadataGroup1 = new ClassMetadataGroup<>("com.dzn.inner", classMetadata1s);
-        ClassMetadataGroup<String> metadataGroup2 = new ClassMetadataGroup<>("com.dzn.inner", classMetadata2s);
+        ClassMetadataGroup metadataGroup1 = new ClassMetadataGroup("com.dzn.inner", classMetadata1s);
+        ClassMetadataGroup metadataGroup2 = new ClassMetadataGroup("com.dzn.inner", classMetadata2s);
 
         sourceLoader.loadClassBatch(metadataGroup1);
         Object o1 = sourceLoader.getObjByGroup("com.dzn.inner", "com.dzn.inner.GroupTest1");

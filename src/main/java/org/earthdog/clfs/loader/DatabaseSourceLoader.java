@@ -13,22 +13,22 @@ import javax.sql.DataSource;
  * @Author DZN
  * @Desc SchemaSourceLoader
  */
-public class DatabaseSourceLoader extends AbstractSourceLoader<String> {
+public class DatabaseSourceLoader extends DefaultSourceLoader {
 
     private final JdbcOp jdbcOp;
-    private final StringSourceLoader stringSourceLoader;
+    private final DefaultSourceLoader defaultSourceLoader;
 
-    public DatabaseSourceLoader(DataSource dataSource, DataSourceType type, StringSourceLoader stringSourceLoader) {
-        this.stringSourceLoader = stringSourceLoader;
+    public DatabaseSourceLoader(DataSource dataSource, DataSourceType type, DefaultSourceLoader defaultSourceLoader) {
+        this.defaultSourceLoader = defaultSourceLoader;
         this.jdbcOp = JdbcOp.getInstance(dataSource, type);
     }
 
     @Override
-    public Object loadClass(ClassMetadata<String> classMetadata) {
-        Object o = stringSourceLoader.loadClass(classMetadata);
+    public Object loadClass(ClassMetadata classMetadata) {
+        Object o = defaultSourceLoader.loadClass(classMetadata);
         // 将ByteCode添加到ClassMetadata中
         StringClassMetadata stringClassMetadata = (StringClassMetadata) classMetadata;
-        byte[] byteCode = stringSourceLoader.getByteCode("common", classMetadata.getQualifiedName());
+        byte[] byteCode = defaultSourceLoader.getByteCode("common", classMetadata.getQualifiedName());
         stringClassMetadata.setByteCode(byteCode);
         // 插入或更新至数据库
         jdbcOp.saveClassMetadata(stringClassMetadata);
@@ -36,14 +36,14 @@ public class DatabaseSourceLoader extends AbstractSourceLoader<String> {
     }
 
     @Override
-    public void loadClassBatch(ClassMetadataGroup<String> classMetadataGroup) {
+    public void loadClassBatch(ClassMetadataGroup classMetadataGroup) {
         String groupName = classMetadataGroup.getGroupName();
-        stringSourceLoader.loadClassBatch(classMetadataGroup);
+        defaultSourceLoader.loadClassBatch(classMetadataGroup);
         // 将ByteCode添加到ClassMetadata中
-        ClassMetadata<String>[] metadataArray = classMetadataGroup.getClassMetadataArray();
-        for (ClassMetadata<String> classMetadata : metadataArray) {
+        ClassMetadata[] metadataArray = classMetadataGroup.getClassMetadataArray();
+        for (ClassMetadata classMetadata : metadataArray) {
             StringClassMetadata stringClassMetadata = (StringClassMetadata) classMetadata;
-            stringClassMetadata.setByteCode(stringSourceLoader.getByteCode(groupName, stringClassMetadata.getQualifiedName()));
+            stringClassMetadata.setByteCode(defaultSourceLoader.getByteCode(groupName, stringClassMetadata.getQualifiedName()));
         }
         // 插入或更新至数据库
         jdbcOp.saveClassMetadataGroup(classMetadataGroup);

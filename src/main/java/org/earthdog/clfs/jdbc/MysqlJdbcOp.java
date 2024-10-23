@@ -34,12 +34,12 @@ public class MysqlJdbcOp extends AbstractJdbcOps {
     }
 
     @Override
-    public void saveClassMetadataGroup(ClassMetadataGroup<String> classMetadataGroup) {
+    public void saveClassMetadataGroup(ClassMetadataGroup classMetadataGroup) {
         String groupName = classMetadataGroup.getGroupName();
-        ClassMetadata<String>[] metadataArray = classMetadataGroup.getClassMetadataArray();
+        ClassMetadata[] metadataArray = classMetadataGroup.getClassMetadataArray();
         try (Connection connection = dataSource.getConnection()) {
         PreparedStatement statement = connection.prepareStatement(SAVE_SQL);
-            for (ClassMetadata<String> classMetadata : metadataArray) {
+            for (ClassMetadata classMetadata : metadataArray) {
                 StringClassMetadata stringClassMetadata = (StringClassMetadata) classMetadata;
                 preparedStatementSaveHandle(statement, stringClassMetadata, groupName);
                 statement.addBatch();
@@ -54,7 +54,7 @@ public class MysqlJdbcOp extends AbstractJdbcOps {
         String qualifiedName = stringClassMetadata.getQualifiedName();
         statement.setString(1, groupName);
         statement.setString(2, qualifiedName);
-        statement.setString(3, stringClassMetadata.getData());
+        statement.setString(3, stringClassMetadata.getCode());
         statement.setBytes(4, stringClassMetadata.getByteCode());
         statement.setString(5, groupName);
     }
